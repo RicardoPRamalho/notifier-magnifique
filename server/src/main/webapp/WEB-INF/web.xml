@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://java.sun.com/xml/ns/javaee" 
+    xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+    version="3.0">
+
+    <display-name>Notifier Magnifique</display-name>
+    <description>Notification server for mobile apps.</description>
+    
+    <context-param>
+        <param-name>javax.faces.PROJECT_STAGE</param-name>
+        <param-value>Development</param-value>
+    </context-param>
+    <context-param>
+        <description>Location for Spring configuration XML.</description>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>WEB-INF/spring-context.xml</param-value>
+    </context-param>
+    
+    <listener>
+        <description>Loads Spring context from XML config file.</description>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <listener>
+        <description>Exposes HTTP request for current thread.</description>
+        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+    </listener>
+    
+    <filter>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>   
+    
+    <servlet>
+        <servlet-name>Spring MVC Servlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Spring MVC Servlet</servlet-name>
+        <url-pattern>/api/*</url-pattern>
+    </servlet-mapping>     
+    
+    <servlet>
+        <description>Servlet that renders JSF pages.</description>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>*.jsf</url-pattern>
+        <url-pattern>*.xhtml</url-pattern>
+    </servlet-mapping>    
+    
+    <servlet>
+        <description>Prime/Atmosphere servlet for browser push.</description>
+        <servlet-name>Push Servlet</servlet-name>
+        <servlet-class>org.primefaces.push.PushServlet</servlet-class>
+        <load-on-startup>3</load-on-startup>
+    </servlet>
+	<servlet-mapping>
+        <servlet-name>Push Servlet</servlet-name>
+        <url-pattern>/push/*</url-pattern>
+    </servlet-mapping>   
+    
+</web-app>
