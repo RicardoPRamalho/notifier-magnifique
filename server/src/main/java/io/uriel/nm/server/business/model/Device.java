@@ -18,6 +18,9 @@ package io.uriel.nm.server.business.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -40,13 +43,21 @@ public class Device implements Serializable
     @Id
     private String deviceId;
     
+    /** Identification name for device's owner. */
+    @NotNull
+    @Size(min=3, max=50)
+    private String ownerName;
+    
     /** Code used with device's provider to send notifications. */
+    @NotNull
     private String subscription;
     
     /** Operational system running on the device. */
+    @NotNull
     private String osName;
     
     /** Operation system's version running on the device. */
+    @NotNull
     private String osVersion;
     
     /** Date in which the device was registered. */
@@ -90,6 +101,24 @@ public class Device implements Serializable
     public void setDeviceId(String deviceId)
     {
         this.deviceId = deviceId;
+    }
+
+    /**
+     * Getter method for ownerName.
+     * @return the current value for ownerName.
+     */
+    public String getOwnerName() 
+    {
+        return ownerName;
+    }
+
+    /**
+     * Defines a new value for ownerName.
+     * @param ownerName the deviceId to set
+     */
+    public void setOwnerName(String ownerName)
+    {
+        this.ownerName = ownerName;
     }
 
     /**

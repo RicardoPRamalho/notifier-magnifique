@@ -1,5 +1,7 @@
 package io.uriel.nm.server.rest.vo;
 
+import io.uriel.nm.server.exception.NotifierException;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.util.StringUtils;
 
@@ -11,12 +13,27 @@ public class PushResults
     
     private final ObjectMapper mapper;
     
+    public PushResults(ResultType resultType, Object contents)
+    {
+        super();
+        try 
+        {
+            this.mapper = new ObjectMapper();
+            this.resultType = resultType;
+            this.contents = mapper.writeValueAsString(contents);
+        } 
+        catch (Exception exp)
+        {
+            throw new NotifierException("Unable to serialize object.", exp);
+        }
+    }
+    
     public PushResults(ResultType resultType, String contents)
     {
         super();
+        this.mapper = new ObjectMapper();
         this.resultType = resultType;
         this.contents = contents;
-        this.mapper = new ObjectMapper();
     }
     
     /**

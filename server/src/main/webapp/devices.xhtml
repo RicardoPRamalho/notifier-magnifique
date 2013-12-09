@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title><h:outputText value="#{msg['application.title']}"/></title>
+    <style>
+        body {
+            text-align: center;
+        }
+        #container {
+            margin: 0 auto;
+            width: 450px;
+            text-align: left;
+        }
+    </style>
+</h:head>
+<h:body>
+    <h:form>
+        <div id="container">
+            <p:panelGrid id="userForm" columns="2">
+                <f:facet name="header">
+                    Autenticação
+                </f:facet>
+                
+                <h:outputText value="#{msg['login.partnerCode']}"/>
+                <p:inputText id="partnerCode"
+                             required="true" 
+                             value="#{authenticationBean.partnerCode}" />
+                
+                <h:outputText value="#{msg['login.username']}"/>
+                <p:inputText id="username"
+                             required="true"  
+                             value="#{authenticationBean.username}" />
+                
+                <h:outputText value="#{msg['login.password']}"/>
+                <p:password id="password"
+                            required="true" 
+                            value="#{authenticationBean.password}" />
+                                         
+                <f:facet name="footer">
+                    <div style="text-align: center">
+                        <p:commandButton id="btnLogin"
+                                         value="Acessar"
+                                         icon="ui-icon-check" 
+                                         style="margin:0; margin-right:5px;" 
+                                         action="#{authenticationBean.authenticate}"
+                                         update="@form"/>
+                        <p:commandButton id="btnCancel"
+                                         value="Cancelar"
+                                         icon="ui-icon-close" 
+                                         style="margin:0; margin-left:5px;" />
+                    </div>
+                </f:facet>
+            </p:panelGrid>
+        </div>
+    </h:form>
+</h:body>
+</html>
