@@ -52,7 +52,8 @@
                         id="btnNotify" 
                         onclick="PF('dlgNotify').show()"
                         icon="ui-icon-mail-closed" 
-                        title="#{msg['subscription.btn.notify']}"/>  
+                        title="#{msg['subscription.btn.notify']}"
+                        actionListener="#{subscriptionsBean.setCurrentDeviceId(device.deviceId)}" />  
                     <p:commandButton 
                         id="btnDetails" 
                         icon="ui-icon-search" 
@@ -82,6 +83,7 @@
         modal="true">  
         <h:form id="dialogForm">  
             <p:inputTextarea 
+                value="#{subscriptionsBean.messageToPush}"
                 rows="5" 
                 cols="30" 
                 counter="counter" 
@@ -97,7 +99,8 @@
                     icon="ui-icon-mail-closed"
                     ajax="true"
                     value="#{msg['subscription.btn.notify']}"
-                    oncomplete="PF('dlgNotify').hide();"/>
+                    oncomplete="PF('dlgNotify').hide();"
+                    actionListener="#{subscriptionsBean.pushNotification}"/>
             </div>
         </h:form>  
     </p:dialog>
