@@ -9,9 +9,8 @@
      http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
      http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.3.xsd">
 
-    <context:component-scan base-package="io.uriel.nm.server" />
     <context:annotation-config />
-    <mvc:annotation-driven />
+    <context:component-scan base-package="io.uriel.nm.server.business,io.uriel.nm.server.view" />
 
     <mongo:mongo host="localhost" port="27017" />
     <mongo:db-factory dbname="NotifierMagnifique" />

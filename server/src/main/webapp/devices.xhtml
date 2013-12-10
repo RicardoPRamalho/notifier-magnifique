@@ -12,51 +12,28 @@
         body {
             text-align: center;
         }
-        #container {
-            margin: 0 auto;
-            width: 450px;
-            text-align: left;
-        }
     </style>
 </h:head>
 <h:body>
     <h:form>
         <div id="container">
-            <p:panelGrid id="userForm" columns="2">
-                <f:facet name="header">
-                    Autenticação
-                </f:facet>
-                
-                <h:outputText value="#{msg['login.partnerCode']}"/>
-                <p:inputText id="partnerCode"
-                             required="true" 
-                             value="#{authenticationBean.partnerCode}" />
-                
-                <h:outputText value="#{msg['login.username']}"/>
-                <p:inputText id="username"
-                             required="true"  
-                             value="#{authenticationBean.username}" />
-                
-                <h:outputText value="#{msg['login.password']}"/>
-                <p:password id="password"
-                            required="true" 
-                            value="#{authenticationBean.password}" />
-                                         
-                <f:facet name="footer">
-                    <div style="text-align: center">
-                        <p:commandButton id="btnLogin"
-                                         value="Acessar"
-                                         icon="ui-icon-check" 
-                                         style="margin:0; margin-right:5px;" 
-                                         action="#{authenticationBean.authenticate}"
-                                         update="@form"/>
-                        <p:commandButton id="btnCancel"
-                                         value="Cancelar"
-                                         icon="ui-icon-close" 
-                                         style="margin:0; margin-left:5px;" />
-                    </div>
-                </f:facet>
-            </p:panelGrid>
+            <p:dataTable var="device" value="#{subscriptionsBean.subscriptions}" stickyHeader="true">  
+                <p:column headerText="#{msg['subscription.table.owner']}">  
+                    <h:outputText value="#{device.ownerName}" />  
+                </p:column>  
+                <p:column headerText="#{msg['subscription.table.platform']}">  
+                    <h:outputText value="#{device.osName}" />  
+                    <h:outputText value="#{device.osVersion}" />
+                </p:column>  
+                <p:column headerText="#{msg['subscription.table.registryDate']}">  
+                    <h:outputText value="#{device.registryDate}" />  
+                </p:column>  
+                <p:column headerText="#{msg['subscription.table.options']}">  
+                    <p:commandButton id="btnNotify" icon="ui-icon-mail-closed" title="#{msg['subscription.btn.notify']}"/>  
+                    <p:commandButton id="btnDetails" icon="ui-icon-search" title="#{msg['subscription.btn.details']}"/>
+                    <p:commandButton id="btnUnsubscribe" icon="ui-icon-trash" title="#{msg['subscription.btn.unsubscribe']}"/>
+                </p:column>  
+            </p:dataTable>
         </div>
     </h:form>
 </h:body>

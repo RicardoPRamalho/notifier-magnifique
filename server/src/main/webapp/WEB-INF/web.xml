@@ -12,7 +12,15 @@
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
     </context-param>
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/spring/application-context.xml</param-value>
+    </context-param>
     
+    <listener>
+        <description>Main Spring context, loaded from init-param.</description>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>    
     <listener>
         <description>Exposes HTTP request for current thread.</description>
         <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
@@ -39,7 +47,7 @@
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>/WEB-INF/application-context.xml</param-value>
+            <param-value>/WEB-INF/spring/rest-context.xml</param-value>
         </init-param>        
         <load-on-startup>1</load-on-startup>
     </servlet>

@@ -15,12 +15,12 @@
  */
 package io.uriel.nm.server.business;
 
-import java.util.Locale;
-
 import io.uriel.nm.server.business.model.Device;
 import io.uriel.nm.server.business.repository.IDeviceRepository;
 import io.uriel.nm.server.exception.DeviceAlreadyRegisteredException;
 import io.uriel.nm.server.exception.DeviceNotSubscribedException;
+
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -62,6 +62,7 @@ public class SubscriptionServices
     /**
      * Subscribes a device, to allow the server to send notifications.
      * 
+     * @param owner         Device's owner's name.
      * @param subscription  Subscription code from specific Notification Service.
      * @param osName        Operational system that is running in the device.
      * @param osVersion     Operational system version running on the device.
@@ -73,21 +74,16 @@ public class SubscriptionServices
      *      If the provided information relates to an already registered device, then
      *      this exception will be thrown, so this problematic scenario may be handled.
      */
-    public Device subscribe(String subscription, String osName, String osVersion)
+    public void subscribe(Device newDevice)
     {
-        Device device = deviceRepository.findBySubscription(subscription);
-        if (device == null)
+        Device existingDevice = deviceRepository.findBySubscription(newDevice.getSubscription());
+        if (existingDevice == null)
         {
-            device = new Device();
-            device.setSubscription(subscription);
-            device.setOsName(osName);
-            device.setOsVersion(osVersion);
-            this.synchronize(device);
-            return device;
+            this.synchronize(newDevice);
         }
         else
         {
-            final String message = getMessage("subscription.alreadySubscribed");
+            final String message = getMessage("subscription.msg.alreadySubscribed");
             throw new DeviceAlreadyRegisteredException(message);
         }
     }
@@ -110,9 +106,21 @@ public class SubscriptionServices
         }
         else
         {
-            final String message = getMessage("subscription.subscriptionNotFound");
+            final String message = getMessage("subscription.msg.subscriptionNotFound");
             throw new DeviceNotSubscribedException(message);
         }
+    }
+    
+    /**
+     * Lists all devices currently subscribed in the application.
+     * 
+     * @return
+     *      An {@code Iterable} providing all devices currently subscribed in 
+     *      the application's persistence layer.
+     */
+    public Iterable<Device> listDevices()
+    {
+        return deviceRepository.findAll();
     }
     
     /**
@@ -126,7 +134,7 @@ public class SubscriptionServices
      */
     private String getMessage(String name, String... args)
     {
-        final String message = messages.getMessage("subscription.alreadySubscribed", args, Locale.getDefault());
+        final String message = messages.getMessage(name, args, Locale.getDefault());
         return message;
     }
     

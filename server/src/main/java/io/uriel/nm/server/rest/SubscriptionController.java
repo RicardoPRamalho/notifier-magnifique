@@ -55,7 +55,7 @@ public class SubscriptionController
     /**
      * REST service that receives a requisition with a Device and subscribes it.
      * 
-     * @param body  Incoming request body, with a device in JSON format.
+     * @param device    Incoming request body, with a device in JSON format.
      * 
      * @return
      *      In case of success, it will return a code of <b>201 CREATED</b> and
@@ -68,14 +68,10 @@ public class SubscriptionController
     @RequestMapping(method=RequestMethod.POST, consumes="application/json", produces="application/json")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Device subscribe(@RequestBody Device newDevice)
+    public Device subscribe(@RequestBody Device device)
     {
         logger.debug("Preparing to subscribe device.");
-        final Device device = service.subscribe(
-                newDevice.getSubscription(), 
-                newDevice.getOsName(), 
-                newDevice.getOsVersion()
-        );
+        service.subscribe(device);
         
         logger.debug("Pushing results to UI.");
         PushResults results = new PushResults(PushResults.ResultType.ADD_ITEM, device);

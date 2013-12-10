@@ -23,6 +23,7 @@ import javax.validation.constraints.Size;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Persistent;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -46,18 +47,22 @@ public class Device implements Serializable
     /** Identification name for device's owner. */
     @NotNull
     @Size(min=3, max=50)
+    @Persistent
     private String ownerName;
     
     /** Code used with device's provider to send notifications. */
     @NotNull
+    @Persistent
     private String subscription;
     
     /** Operational system running on the device. */
     @NotNull
+    @Persistent
     private String osName;
     
     /** Operation system's version running on the device. */
     @NotNull
+    @Persistent
     private String osVersion;
     
     /** Date in which the device was registered. */
