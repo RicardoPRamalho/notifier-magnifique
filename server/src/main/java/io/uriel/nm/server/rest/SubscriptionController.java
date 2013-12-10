@@ -18,7 +18,6 @@ package io.uriel.nm.server.rest;
 import io.uriel.nm.server.business.SubscriptionServices;
 import io.uriel.nm.server.business.model.Device;
 import io.uriel.nm.server.exception.NotifierException;
-import io.uriel.nm.server.rest.vo.PushResults;
 import io.uriel.nm.server.rest.vo.RestError;
 
 import org.primefaces.push.PushContext;
@@ -74,9 +73,8 @@ public class SubscriptionController
         service.subscribe(device);
         
         logger.debug("Pushing results to UI.");
-        PushResults results = new PushResults(PushResults.ResultType.ADD_ITEM, device);
         PushContext pushContext = PushContextFactory.getDefault().getPushContext();
-        pushContext.push("/subscriptions", results.toJson());
+        pushContext.push("/subscriptions", "Device created");
         
         logger.debug("Device was successfully created.");
         return device;
@@ -103,9 +101,8 @@ public class SubscriptionController
         service.unsubscribe(id);
         
         logger.debug("Pushing results to UI.");
-        PushResults results = new PushResults(PushResults.ResultType.REMOVE_ITEM, id);
         PushContext pushContext = PushContextFactory.getDefault().getPushContext();
-        pushContext.push("/subscriptions", results.toJson());
+        pushContext.push("/subscriptions", "Device removed");
         
         logger.debug("Device was successfully removed.");
     }

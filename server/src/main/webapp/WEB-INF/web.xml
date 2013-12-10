@@ -13,6 +13,10 @@
         <param-value>Development</param-value>
     </context-param>
     <context-param>
+        <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+        <param-value>true</param-value>
+    </context-param>      
+    <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>/WEB-INF/spring/application-context.xml</param-value>
     </context-param>
@@ -79,7 +83,7 @@
     </servlet>
 	<servlet-mapping>
         <servlet-name>Push Servlet</servlet-name>
-        <url-pattern>/push/*</url-pattern>
+        <url-pattern>/primepush/*</url-pattern>
     </servlet-mapping>   
     
 </web-app>

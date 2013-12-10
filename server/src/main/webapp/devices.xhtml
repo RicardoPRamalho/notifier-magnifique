@@ -8,16 +8,31 @@
     xmlns:p="http://primefaces.org/ui">
 <h:head>
     <title><h:outputText value="#{msg['application.title']}"/></title>
-    <style>
-        body {
-            text-align: center;
+    <script type="text/javascript">
+    //<![CDATA[
+        function updateSubscriptions(facesmessage)
+        {
+        	/*
+        	growl.renderMessage({ 
+    			summary:'Information',
+                detail: facesmessage,
+                severity: 'info'
+            });
+        	*/
+        	updateDevicesAsync();
         }
-    </style>
+    //]]>
+    </script>
 </h:head>
 <h:body>
     <h:form>
+        <p:growl widgetVar="growl" showDetail="true" />
         <div id="container">
-            <p:dataTable var="device" value="#{subscriptionsBean.subscriptions}" stickyHeader="true">  
+            <p:dataTable 
+                id="deviceTable"
+                var="device" 
+                value="#{subscriptionsBean.subscriptions}" >
+                
                 <p:column headerText="#{msg['subscription.table.owner']}">  
                     <h:outputText value="#{device.ownerName}" />  
                 </p:column>  
@@ -29,12 +44,29 @@
                     <h:outputText value="#{device.registryDate}" />  
                 </p:column>  
                 <p:column headerText="#{msg['subscription.table.options']}">  
-                    <p:commandButton id="btnNotify" icon="ui-icon-mail-closed" title="#{msg['subscription.btn.notify']}"/>  
-                    <p:commandButton id="btnDetails" icon="ui-icon-search" title="#{msg['subscription.btn.details']}"/>
-                    <p:commandButton id="btnUnsubscribe" icon="ui-icon-trash" title="#{msg['subscription.btn.unsubscribe']}"/>
-                </p:column>  
+                    <p:commandButton 
+                        id="btnNotify" 
+                        icon="ui-icon-mail-closed" 
+                        title="#{msg['subscription.btn.notify']}"/>  
+                    <p:commandButton 
+                        id="btnDetails" 
+                        icon="ui-icon-search" 
+                        title="#{msg['subscription.btn.details']}"/>
+                    <p:commandButton 
+                        id="btnUnsubscribe" 
+                        icon="ui-icon-trash" 
+                        title="#{msg['subscription.btn.unsubscribe']}"/>
+                </p:column>
+                
             </p:dataTable>
         </div>
+        <p:remoteCommand 
+            name="updateDevicesAsync" 
+            update="deviceTable" />
     </h:form>
+    <p:socket 
+        onMessage="updateSubscriptions" 
+        channel="/subscriptions" 
+        autoConnect="true" />
 </h:body>
 </html>
