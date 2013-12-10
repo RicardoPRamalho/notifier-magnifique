@@ -10,29 +10,33 @@
     <title><h:outputText value="#{msg['application.title']}"/></title>
     <script type="text/javascript">
     //<![CDATA[
-        function updateSubscriptions(facesmessage)
+        /**
+         * Requests an update for all visual elements, displaying subscriptions
+         * currently stored in backend server's persistence. It's triggered by
+         * the WebSocket channel, whenever a message arrives in this page.
+         *
+         * @param facesMessage
+         *      Message received from the WebSocket channel. Contents received
+         *      are literal, which means they are not wrapped by the engine.
+         */
+        function updateSubscriptions(facesMessage)
         {
-        	/*
-        	growl.renderMessage({ 
-    			summary:'Information',
-                detail: facesmessage,
-                severity: 'info'
-            });
-        	*/
         	updateDevicesAsync();
         }
     //]]>
     </script>
 </h:head>
 <h:body>
-    <h:form>
-        <p:growl widgetVar="growl" showDetail="true" />
+    <h:form id="tableForm">
         <div id="container">
+            <ui:remove>
+                Datatable containing all subscriptions currently stored in backend.
+                It is updated after a WebSocket message or removing items explicitly.                 
+            </ui:remove>
             <p:dataTable 
                 id="deviceTable"
                 var="device" 
                 value="#{subscriptionsBean.subscriptions}" >
-                
                 <p:column headerText="#{msg['subscription.table.owner']}">  
                     <h:outputText value="#{device.ownerName}" />  
                 </p:column>  
@@ -46,6 +50,7 @@
                 <p:column headerText="#{msg['subscription.table.options']}">  
                     <p:commandButton 
                         id="btnNotify" 
+                        onclick="PF('dlgNotify').show()"
                         icon="ui-icon-mail-closed" 
                         title="#{msg['subscription.btn.notify']}"/>  
                     <p:commandButton 
@@ -53,17 +58,49 @@
                         icon="ui-icon-search" 
                         title="#{msg['subscription.btn.details']}"/>
                     <p:commandButton 
-                        id="btnUnsubscribe" 
-                        icon="ui-icon-trash" 
-                        title="#{msg['subscription.btn.unsubscribe']}"/>
+                        id="btnUnsubscribe"
+                        update="deviceTable" 
+                        icon="ui-icon-trash"
+                        ajax="true"
+                        title="#{msg['subscription.btn.unsubscribe']}"
+                        actionListener="#{subscriptionsBean.unsubscribe(device.deviceId)}" />
                 </p:column>
-                
             </p:dataTable>
         </div>
         <p:remoteCommand 
             name="updateDevicesAsync" 
             update="deviceTable" />
     </h:form>
+    <ui:remove>
+        Dialog shown to allow the user to send a push notification to a selected
+        number of devices (or just a specific one). The dialog is modal.                 
+    </ui:remove>
+    <p:dialog 
+        header="#{msg['subscription.dialog.title']}" 
+        widgetVar="dlgNotify" 
+        resizable="false"
+        modal="true">  
+        <h:form id="dialogForm">  
+            <p:inputTextarea 
+                rows="5" 
+                cols="30" 
+                counter="counter" 
+                maxlength="250"       
+                counterTemplate="{0} #{msg['subscription.dialog.remaining']}" 
+                autoResize="false"/>
+            <br/>
+            <h:outputText id="counter" />
+            <br/>
+            <div style="text-align: center">
+                <p:commandButton 
+                    id="submitButton" 
+                    icon="ui-icon-mail-closed"
+                    ajax="true"
+                    value="#{msg['subscription.btn.notify']}"
+                    oncomplete="PF('dlgNotify').hide();"/>
+            </div>
+        </h:form>  
+    </p:dialog>
     <p:socket 
         onMessage="updateSubscriptions" 
         channel="/subscriptions" 

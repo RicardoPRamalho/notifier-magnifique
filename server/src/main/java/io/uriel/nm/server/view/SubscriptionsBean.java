@@ -34,13 +34,31 @@ public class SubscriptionsBean extends AbstractManagedBean
     private SubscriptionServices subscriptionService;
     
     /**
-     * Provides a live version of the current list of subscriptions.
+     * Provides a <b>live</b> version of the current list of subscriptions.
      * 
      * @return
      *      An {@code Iterable} with all devices currently subscribed.
      */
     public Iterable<Device> getSubscriptions()
     {
+        logger.debug("Requesting a live subscription list.");
         return subscriptionService.listDevices();
+    }
+    
+    /** 
+     * Cancels a subscription for a given device indentifier.
+     * 
+     * @param deviceId
+     *      Identifier of the device that is going to be unregistered. 
+     */
+    public void unsubscribe(String deviceId)
+    {
+        logger.debug(message("log.unsubscribe.begin", deviceId));
+        subscriptionService.unsubscribe(deviceId);
+    }
+    
+    public void notify(String deviceId, String message)
+    {
+        logger.debug(message("log.notify.begin", deviceId));
     }
 }

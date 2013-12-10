@@ -27,7 +27,10 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
 
 /**
- * Services related to the subscription process.
+ * Services providing business implementation for all subscription tasks.
+ * <p>
+ * A subscription represents a device, registered for this application, in
+ * one of the main Cloud Message Servers supported by the server.
  * 
  * @author Thiago Uriel M. Garcia
  */
@@ -137,5 +140,4 @@ public class SubscriptionServices
         final String message = messages.getMessage(name, args, Locale.getDefault());
         return message;
     }
-    
 }
