@@ -30,6 +30,7 @@
         <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
     </listener>
     <listener>
+        <description>JSF configuration, required by Jetty.</description>
         <listener-class>com.sun.faces.config.ConfigureListener</listener-class>
     </listener>    
     
