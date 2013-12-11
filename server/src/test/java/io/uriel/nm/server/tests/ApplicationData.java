@@ -62,7 +62,7 @@ class ApplicationData
             {"Ross Geller", "IOS", "7.0"},
             {"Joey Tribbiani", "ANDROID", "2.3.3"},
             {"Phoebe Buffay", "ANDROID", "4.3"},
-            {"Rachel Greene", "IOS", "7.0"},
+            {"Rachel Green", "IOS", "7.0"},
         };
     
     /**

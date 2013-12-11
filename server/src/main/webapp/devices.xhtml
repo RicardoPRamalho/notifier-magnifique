@@ -36,38 +36,63 @@
             <p:dataTable 
                 id="deviceTable"
                 var="device" 
+                selection="#{subscriptionsBean.currentDevices}"
                 value="#{subscriptionsBean.subscriptions}" >
+                <p:column selectionMode="multiple" style="width: 5%" /> 
                 <p:column headerText="#{msg['subscription.table.owner']}">  
                     <h:outputText value="#{device.ownerName}" />  
                 </p:column>  
                 <p:column headerText="#{msg['subscription.table.platform']}">  
-                    <h:outputText value="#{device.osName}" />  
+                    <h:outputText value="#{device.osName}" />, 
                     <h:outputText value="#{device.osVersion}" />
                 </p:column>  
-                <p:column headerText="#{msg['subscription.table.registryDate']}">  
-                    <h:outputText value="#{device.registryDate}" />  
+                <p:column headerText="#{msg['subscription.table.registryDate']}">
+                    <h:outputText value="#{device.registryDate}">  
+                        <f:convertDateTime 
+                            type="both" 
+                            dateStyle="short"
+                            locale="#{subscriptionsBean.locale}"
+                            timeZone="#{subscriptionsBean.timeZone}" />  
+                    </h:outputText> 
                 </p:column>  
-                <p:column headerText="#{msg['subscription.table.options']}">  
-                    <p:commandButton 
-                        id="btnNotify" 
-                        onclick="PF('dlgNotify').show()"
-                        icon="ui-icon-mail-closed" 
-                        title="#{msg['subscription.btn.notify']}"
-                        actionListener="#{subscriptionsBean.setCurrentDeviceId(device.deviceId)}" />  
-                    <p:commandButton 
-                        id="btnDetails" 
-                        icon="ui-icon-search" 
-                        title="#{msg['subscription.btn.details']}"/>
-                    <p:commandButton 
-                        id="btnUnsubscribe"
-                        update="deviceTable" 
-                        icon="ui-icon-trash"
-                        ajax="true"
-                        title="#{msg['subscription.btn.unsubscribe']}"
-                        actionListener="#{subscriptionsBean.unsubscribe(device.deviceId)}" />
+                <p:column headerText="#{msg['subscription.table.options']}">
+                    <div style="text-align: center">  
+                        <p:commandButton 
+                            id="btnNotify" 
+                            onclick="PF('dlgNotify').show()"
+                            icon="ui-icon-mail-closed" 
+                            title="#{msg['subscription.btn.notify']}"
+                            actionListener="#{subscriptionsBean.setCurrentDevice(device)}" />  
+                        <p:commandButton 
+                            id="btnDetails" 
+                            icon="ui-icon-search" 
+                            title="#{msg['subscription.btn.details']}"/>
+                        <p:commandButton 
+                            id="btnUnsubscribe"
+                            update="deviceTable" 
+                            icon="ui-icon-trash"
+                            ajax="true"
+                            title="#{msg['subscription.btn.unsubscribe']}"
+                            actionListener="#{subscriptionsBean.unsubscribe(device.deviceId)}" />
+                    </div>
                 </p:column>
+                <p:ajax event="toggleSelect" listener="#{subscriptionsBean.checkMultipleSelection}" update="pnMultipleControls" />
+                <p:ajax event="rowSelectCheckbox" listener="#{subscriptionsBean.checkMultipleSelection}" update="pnMultipleControls" /> 
+                <p:ajax event="rowUnselectCheckbox" listener="#{subscriptionsBean.checkMultipleSelection}" update="pnMultipleControls" />
             </p:dataTable>
         </div>
+        <p:outputPanel id="pnMultipleControls" layout="block">
+            <p:commandButton 
+                id="btnBroadcast" 
+                icon="ui-icon-mail-closed" 
+                title="#{msg['subscription.btn.broadcast']}"
+                rendered="#{subscriptionsBean.multipleSelection}" />
+            <p:commandButton 
+                id="btnRemoveAll" 
+                icon="ui-icon-trash" 
+                title="#{msg['subscription.btn.unsubscribeAll']}"
+                rendered="#{subscriptionsBean.multipleSelection}" />
+        </p:outputPanel>            
         <p:remoteCommand 
             name="updateDevicesAsync" 
             update="deviceTable" />
@@ -81,7 +106,7 @@
         widgetVar="dlgNotify" 
         resizable="false"
         modal="true">  
-        <h:form id="dialogForm">  
+        <h:form id="dialogForm">
             <p:inputTextarea 
                 value="#{subscriptionsBean.messageToPush}"
                 rows="5" 
@@ -92,7 +117,7 @@
                 autoResize="false"/>
             <br/>
             <h:outputText id="counter" />
-            <br/>
+            <p/>
             <div style="text-align: center">
                 <p:commandButton 
                     id="submitButton" 
@@ -104,6 +129,11 @@
             </div>
         </h:form>  
     </p:dialog>
+    <ui:remove>
+        Socket component that uses WebSocket (or falls back to Comet) to receive
+        updates about the subscription table. Channel does not considers Servlet
+        mapping defined for the Push Servlet in web.xml.                 
+    </ui:remove>    
     <p:socket 
         onMessage="updateSubscriptions" 
         channel="/subscriptions" 

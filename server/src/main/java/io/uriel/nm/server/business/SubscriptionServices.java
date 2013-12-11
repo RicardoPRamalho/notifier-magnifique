@@ -24,6 +24,8 @@ import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 /**
@@ -44,6 +46,31 @@ public class SubscriptionServices
     /** Repository interface used to access persistence layer. */
     @Autowired
     private IDeviceRepository deviceRepository;
+    
+    /**
+     * Finds a specific device, by it's unique identifier.
+     * 
+     * @param deviceId  Device's unique identifier, used for the lookup.
+     * @return          The device related to the identifier or {@code null}.
+     */
+    public Device findDevice(String deviceId)
+    {
+        return deviceRepository.findOne(deviceId);
+    }
+    
+    /**
+     * Lists all devices currently subscribed in the application, sorted by
+     * their {@code registryDate} property in descendent order.
+     * 
+     * @return
+     *      An {@code Iterable} providing all devices currently subscribed in 
+     *      the application's persistence layer.
+     */
+    public Iterable<Device> listDevices()
+    {
+        Sort sort = new Sort(Direction.DESC, "registryDate");
+        return deviceRepository.findAll(sort);
+    }
     
     /**
      * Synchronizes current entity state with persistence layer.
@@ -112,18 +139,6 @@ public class SubscriptionServices
             final String message = getMessage("subscription.msg.subscriptionNotFound");
             throw new DeviceNotSubscribedException(message);
         }
-    }
-    
-    /**
-     * Lists all devices currently subscribed in the application.
-     * 
-     * @return
-     *      An {@code Iterable} providing all devices currently subscribed in 
-     *      the application's persistence layer.
-     */
-    public Iterable<Device> listDevices()
-    {
-        return deviceRepository.findAll();
     }
     
     /**

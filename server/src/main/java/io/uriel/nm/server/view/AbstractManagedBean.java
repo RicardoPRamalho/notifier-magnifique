@@ -17,6 +17,7 @@ package io.uriel.nm.server.view;
 
 import java.io.Serializable;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +44,31 @@ public abstract class AbstractManagedBean implements Serializable
     /** Spring object that provides I18N messages. */
     @Autowired
     private ResourceBundleMessageSource messages;
- 
+
+    /** 
+     * Provides the current default {@link TimeZone}, that may be used for
+     * all formatting needs in the application.
+     * 
+     * @return
+     *      Current {@link TimeZone} used for the whole application.
+     */
+    public TimeZone getTimeZone()
+    {
+        return TimeZone.getDefault();
+    }
+    
+    /** 
+     * Provides the current default {@link Locale}, that may be used for
+     * all formatting needs in the application.
+     * 
+     * @return
+     *      Current {@link Locale} used for the whole application.
+     */
+    public Locale getLocale()
+    {
+        return Locale.getDefault();
+    }
+    
     /**
      * Provides a localized, formatted and localized message from bundles.
      * 
