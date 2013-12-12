@@ -64,7 +64,6 @@ public class SubscriptionsBean extends AbstractManagedBean
      */
     public Iterable<Device> getSubscriptions()
     {
-        logger.debug(message("log.getSubscriptions.begin"));
         return dataModel;
     }
     
@@ -77,9 +76,7 @@ public class SubscriptionsBean extends AbstractManagedBean
      */
     public void checkMultipleSelection()
     {
-        logger.debug(message("log.checkMultipleSelection.begin"));
         multipleSelection = (currentDevices.length > 1);
-        logger.debug(message("log.checkMultipleSelection.end", String.valueOf(multipleSelection)));
     }
     
     /** 
@@ -90,79 +87,11 @@ public class SubscriptionsBean extends AbstractManagedBean
      */
     public void unsubscribe(String deviceId)
     {
-        logger.debug(message("log.unsubscribe.begin", deviceId));
         subscriptionService.unsubscribe(deviceId);
     }
     
     public void pushNotification()
     {
         logger.debug(message("log.notify.begin", currentDevice.getDeviceId()));
-    }
-
-    
-    
-    //----[ Getters and Setters required by the UI ]-------------------------------------
-    
-    /**
-     * Getter method for {@code multipleSelection}.
-     * @return Current value for {@code multipleSelection}.
-     */
-    public boolean isMultipleSelection() 
-    {
-        return multipleSelection;
-    }
-
-    /**
-     * Getter method for {@code currentDevice}.
-     * @return Current value for {@code currentDevice}.
-     */
-    public Device getCurrentDevice() 
-    {
-        return currentDevice;
-    }
-
-    /**
-     * Setter method for {@code currentDevice}.
-     * @param currentDevice New value for {@code currentDevice}.
-     */
-    public void setCurrentDevice(Device currentDevice) 
-    {
-        this.currentDevice = currentDevice;
-    }
-
-    /**
-     * Getter method for {@code currentDevices}.
-     * @return Current value for {@code currentDevices}.
-     */
-    public Device[] getCurrentDevices() 
-    {
-        return currentDevices;
-    }
-
-    /**
-     * Setter method for {@code currentDevices}.
-     * @param currentDevice New value for {@code currentDevices}.
-     */
-    public void setCurrentDevices(Device[] currentDevices) 
-    {
-        this.currentDevices = currentDevices;
-    }    
-    
-    /**
-     * Getter method for {@code messageToPush}.
-     * @return Current value for {@code messageToPush}.
-     */
-    public String getMessageToPush() 
-    {
-        return messageToPush;
-    }
-
-    /**
-     * Setter method for {@code messageToPush}.
-     * @param messageToPush New value for {@code messageToPush}.
-     */
-    public void setMessageToPush(String messageToPush) 
-    {
-        this.messageToPush = messageToPush;
     }
 }
