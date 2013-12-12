@@ -34,4 +34,13 @@ public interface IDeviceRepository extends PagingAndSortingRepository<Device, St
      * @return              {@code Device} entity, or null, if none exists.
      */
     Device findBySubscription(String subscription);
+    
+    /**
+     * Counts all devices for a given platform.
+     * 
+     * @param osName    Target platform for subscription counting.
+     * @return          {@code long} with subscription count for given platform.
+     */
+    long countByOsName(String osName);
+    
 }

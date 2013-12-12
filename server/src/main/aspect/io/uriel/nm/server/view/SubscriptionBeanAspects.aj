@@ -16,7 +16,6 @@
 package io.uriel.nm.server.view;
 
 import io.uriel.nm.server.business.model.Device;
-import io.uriel.nm.server.view.SubscriptionsBean;
 
 public privileged aspect SubscriptionBeanAspects 
 {
@@ -81,5 +80,5 @@ public privileged aspect SubscriptionBeanAspects
     public void SubscriptionsBean.setMessageToPush(String messageToPush) 
     {
         this.messageToPush = messageToPush;
-    }    
+    }
 }

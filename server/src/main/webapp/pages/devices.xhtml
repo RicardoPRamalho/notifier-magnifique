@@ -23,105 +23,125 @@
         function updateSubscriptions(facesMessage)
         {
         	updateDevicesAsync();
+        	updateReportsAsync();
         }
     //]]>
     </script>
 </h:head>
 <h:body>
-    <h:form id="tableForm">
-        <div id="container">
-            <ui:remove>
-                Datatable containing all subscriptions currently stored in backend.
-                It is updated after a WebSocket message or removing items explicitly.                 
-            </ui:remove>
-            <p:dataTable 
-                id="deviceTable"
-                lazy="true"
-                var="device" 
-                selectionMode="multiple"
-                selection="#{subscriptionsBean.currentDevices}"
-                paginator="true" 
-                rows="10"
-                sortBy="registryDate"
-                sortOrder="descending"
-                value="#{subscriptionsBean.subscriptions}"
-                emptyVarMessage="#{msg['subscription.table.nothingToShow']}" 
-                rowsPerPageTemplate="10,20,40"
-                paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}" >
-                <f:facet name="header">  
-                    <h:outputText value="#{msg['subscription.table.title']}"/>
-                </f:facet> 
-                <p:column headerText="#{msg['subscription.table.owner']}" sortBy="ownerName" width="25%">  
-                    <h:outputText value="#{device.ownerName}" />  
-                </p:column>  
-                <p:column headerText="#{msg['subscription.table.platform']}" sortBy="osName" width="25%">  
-                    <h:outputText value="#{device.osName}" />, 
-                    <h:outputText value="#{device.osVersion}" />
-                </p:column>  
-                <p:column headerText="#{msg['subscription.table.registryDate']}" sortBy="registryDate" width="25%">
-                    <h:outputText value="#{device.registryDate}">  
-                        <f:convertDateTime 
-                            type="both" 
-                            dateStyle="short"
-                            locale="#{subscriptionsBean.locale}"
-                            timeZone="#{subscriptionsBean.timeZone}" />  
-                    </h:outputText> 
-                </p:column>  
-                <p:column headerText="#{msg['subscription.table.options']}" width="25%">
-                    <div style="text-align: center">  
-                        <p:commandButton 
-                            id="btnNotify" 
-                            onclick="PF('dlgNotify').show()"
-                            icon="ui-icon-mail-closed" 
-                            title="#{msg['subscription.btn.notify']}"
-                            actionListener="#{subscriptionsBean.setCurrentDevice(device)}" />  
-                        <p:commandButton 
-                            id="btnDetails" 
-                            icon="ui-icon-search" 
-                            title="#{msg['subscription.btn.details']}"/>
-                        <p:commandButton 
-                            id="btnUnsubscribe"
-                            update="deviceTable" 
-                            icon="ui-icon-trash"
-                            ajax="true"
-                            title="#{msg['subscription.btn.unsubscribe']}"
-                            actionListener="#{subscriptionsBean.unsubscribe(device.deviceId)}" />
-                    </div>
-                </p:column>
-                <f:facet name="footer">
-                    <c:choose>
-                        <c:when test="#{subscriptionsBean.subscriptions.rowCount == 1}">
-                            <h:outputFormat value="#{msg['subscription.table.countSingular']}">
-                                <f:param value="#{subscriptionsBean.subscriptions.rowCount}"/>
-                            </h:outputFormat>  
-                        </c:when>
-                        <c:otherwise>
-                            <h:outputFormat value="#{msg['subscription.table.countPlural']}">
-                                <f:param value="#{subscriptionsBean.subscriptions.rowCount}"/>
-                            </h:outputFormat>  
-                        </c:otherwise>
-                    </c:choose>
-                </f:facet>                
-                <p:ajax event="rowSelect" listener="#{subscriptionsBean.checkMultipleSelection}" update="@form:pnMultipleControls" /> 
-                <p:ajax event="rowUnselect" listener="#{subscriptionsBean.checkMultipleSelection}" update="@form:pnMultipleControls" />
-            </p:dataTable>
-        </div>
-        <p:outputPanel id="pnMultipleControls" layout="block">
-            <p:commandButton 
-                id="btnBroadcast" 
-                icon="ui-icon-mail-closed" 
-                title="#{msg['subscription.btn.broadcast']}"
-                rendered="#{subscriptionsBean.multipleSelection}" />
-            <p:commandButton 
-                id="btnRemoveAll" 
-                icon="ui-icon-trash" 
-                title="#{msg['subscription.btn.unsubscribeAll']}"
-                rendered="#{subscriptionsBean.multipleSelection}" />
-        </p:outputPanel>            
-        <p:remoteCommand 
-            name="updateDevicesAsync" 
-            update="deviceTable" />
-    </h:form>
+    <div id="container" style="overflow: hidden;">
+        <h:form id="tableForm">
+            <div id="table" style="width: 60%; float: left;">
+                <ui:remove>
+                    Datatable containing all subscriptions currently stored in backend.
+                    It is updated after a WebSocket message or removing items explicitly.                 
+                </ui:remove>
+                <p:dataTable 
+                    id="deviceTable"
+                    lazy="true"
+                    var="device" 
+                    selectionMode="multiple"
+                    selection="#{subscriptionsBean.currentDevices}"
+                    paginator="true" 
+                    rows="10"
+                    sortBy="registryDate"
+                    sortOrder="descending"
+                    value="#{subscriptionsBean.subscriptions}"
+                    emptyVarMessage="#{msg['subscription.table.nothingToShow']}" 
+                    rowsPerPageTemplate="10,20,40"
+                    paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}" >
+                    <f:facet name="header">  
+                        <h:outputText value="#{msg['subscription.table.title']}"/>
+                    </f:facet> 
+                    <p:column headerText="#{msg['subscription.table.owner']}" sortBy="ownerName" width="25%">  
+                        <h:outputText value="#{device.ownerName}" />  
+                    </p:column>  
+                    <p:column headerText="#{msg['subscription.table.platform']}" sortBy="osName" width="25%">  
+                        <h:outputText value="#{device.osName}" />, 
+                        <h:outputText value="#{device.osVersion}" />
+                    </p:column>  
+                    <p:column headerText="#{msg['subscription.table.registryDate']}" sortBy="registryDate" width="25%">
+                        <h:outputText value="#{device.registryDate}">  
+                            <f:convertDateTime 
+                                type="both" 
+                                dateStyle="short"
+                                locale="#{subscriptionsBean.locale}"
+                                timeZone="#{subscriptionsBean.timeZone}" />  
+                        </h:outputText> 
+                    </p:column>  
+                    <p:column headerText="#{msg['subscription.table.options']}" width="25%">
+                        <div style="text-align: center">  
+                            <p:commandButton 
+                                id="btnNotify" 
+                                onclick="PF('dlgNotify').show()"
+                                icon="ui-icon-mail-closed" 
+                                title="#{msg['subscription.btn.notify']}"
+                                actionListener="#{subscriptionsBean.setCurrentDevice(device)}" />  
+                            <p:commandButton 
+                                id="btnDetails" 
+                                icon="ui-icon-search" 
+                                title="#{msg['subscription.btn.details']}"/>
+                            <p:commandButton 
+                                id="btnUnsubscribe"
+                                update="deviceTable,@form:subscriptionsPieChart" 
+                                icon="ui-icon-trash"
+                                ajax="true"
+                                title="#{msg['subscription.btn.unsubscribe']}">
+                                <f:actionListener binding="#{subscriptionsBean.unsubscribe(device.deviceId)}"/>
+                                <f:actionListener binding="#{reportsBean.updatePieModel()}"/>
+                            </p:commandButton>
+                        </div>
+                    </p:column>
+                    <f:facet name="footer">
+                        <c:choose>
+                            <c:when test="#{subscriptionsBean.subscriptions.rowCount == 1}">
+                                <h:outputFormat value="#{msg['subscription.table.countSingular']}">
+                                    <f:param value="#{subscriptionsBean.subscriptions.rowCount}"/>
+                                </h:outputFormat>  
+                            </c:when>
+                            <c:otherwise>
+                                <h:outputFormat value="#{msg['subscription.table.countPlural']}">
+                                    <f:param value="#{subscriptionsBean.subscriptions.rowCount}"/>
+                                </h:outputFormat>  
+                            </c:otherwise>
+                        </c:choose>
+                    </f:facet>                
+                    <p:ajax event="rowSelect" listener="#{subscriptionsBean.checkMultipleSelection}" update="@form:pnMultipleControls" /> 
+                    <p:ajax event="rowUnselect" listener="#{subscriptionsBean.checkMultipleSelection}" update="@form:pnMultipleControls" />
+                </p:dataTable>
+                <p:outputPanel id="pnMultipleControls" layout="block">
+                    <p:commandButton 
+                        id="btnBroadcast" 
+                        icon="ui-icon-mail-closed" 
+                        title="#{msg['subscription.btn.broadcast']}"
+                        rendered="#{subscriptionsBean.multipleSelection}" />
+                    <p:commandButton 
+                        id="btnRemoveAll" 
+                        icon="ui-icon-trash" 
+                        title="#{msg['subscription.btn.unsubscribeAll']}"
+                        rendered="#{subscriptionsBean.multipleSelection}" />
+                </p:outputPanel>            
+            </div>
+            <div id="chart" style="width: 40%; margin-left: 61%;">
+                <p:pieChart 
+                    id="subscriptionsPieChart" 
+                    title="#{msg['subscription.chart.title']}"
+                    value="#{reportsBean.pieModel}" 
+                    legendPosition="e" 
+                    fill="true" 
+                    showDataLabels="true"  
+                    seriesColors="9ee096,96c2e0,e0a696"
+                    style="width:90%; height:300px" />
+            </div>
+            <p:remoteCommand 
+                name="updateDevicesAsync" 
+                update="deviceTable" />
+            <p:remoteCommand 
+                name="updateReportsAsync" 
+                actionListener="#{reportsBean.updatePieModel}"
+                update="subscriptionsPieChart" />
+        </h:form>
+    </div>
     <ui:remove>
         Dialog shown to allow the user to send a push notification to a selected
         number of devices (or just a specific one). The dialog is modal.                 

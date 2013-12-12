@@ -18,7 +18,7 @@
     </context-param>
     <context-param>
         <param-name>primefaces.THEME</param-name>
-        <param-value>greenlife</param-value>
+        <param-value>magnifique</param-value>
     </context-param>
     <context-param>
         <param-name>contextConfigLocation</param-name>

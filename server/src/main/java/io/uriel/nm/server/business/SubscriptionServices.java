@@ -22,6 +22,9 @@ import io.uriel.nm.server.exception.DeviceNotSubscribedException;
 
 import java.util.Locale;
 
+import javax.annotation.PostConstruct;
+
+import org.primefaces.model.chart.PieChartModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.domain.PageRequest;
@@ -105,10 +108,26 @@ public class SubscriptionServices
         }
     }
     
+    /**
+     * Counts all devices currently subscribed in the application.
+     * 
+     * @return
+     *      A {@code long} informing the current subscription count.
+     */
     public long countDevices()
     {
         return deviceRepository.count();
     }
+    
+    public long[] countDevicesByPlatform()
+    {
+        final long[] platforms = new long[3];
+        platforms[0] = deviceRepository.countByOsName("ANDROID");
+        platforms[1] = deviceRepository.countByOsName("IOS");
+        platforms[2] = deviceRepository.countByOsName("WINDOWSPHONE");
+        return platforms;
+    }
+    
     
     /**
      * Synchronizes current entity state with persistence layer.
@@ -170,7 +189,7 @@ public class SubscriptionServices
         Device device = findDevice(deviceId);
         deviceRepository.delete(device);
     }
-    
+
     /**
      * Helper method.
      * <p>

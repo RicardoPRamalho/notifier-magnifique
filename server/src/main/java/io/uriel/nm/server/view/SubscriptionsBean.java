@@ -92,6 +92,6 @@ public class SubscriptionsBean extends AbstractManagedBean
     
     public void pushNotification()
     {
-        logger.debug(message("log.notify.begin", currentDevice.getDeviceId()));
+        // Not yet! =)
     }
 }
