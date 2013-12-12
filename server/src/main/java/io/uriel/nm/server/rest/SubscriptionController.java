@@ -17,7 +17,8 @@ package io.uriel.nm.server.rest;
 
 import io.uriel.nm.server.business.SubscriptionServices;
 import io.uriel.nm.server.business.model.Device;
-import io.uriel.nm.server.exception.NotifierException;
+import io.uriel.nm.server.exception.DeviceAlreadyRegisteredException;
+import io.uriel.nm.server.exception.DeviceNotSubscribedException;
 import io.uriel.nm.server.rest.vo.RestError;
 
 import org.primefaces.push.PushContext;
@@ -50,6 +51,13 @@ public class SubscriptionController
     /** Service object, exposed by this RESTful controller. */
     @Autowired
     private SubscriptionServices service;
+    
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(value="/{id}", produces="application/json")
+    public Device checkSubscription(@PathVariable String deviceId)
+    {
+        return service.findDevice(deviceId);
+    }
     
     /**
      * REST service that receives a requisition with a Device and subscribes it.
@@ -109,16 +117,34 @@ public class SubscriptionController
     
     /**
      * Handle errors thrown by REST services and delivers a proper HTTP response.
+     * This handler will catch <b>DeviceNotSubscribedException</b> with 404.
      * 
      * @param nExp  Exception that has ocurred.
      * @return      {@link RestError} with error details. 
      */
-    @ExceptionHandler(NotifierException.class)
+    @ExceptionHandler(DeviceNotSubscribedException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public RestError handleErrors(DeviceNotSubscribedException nExp)
+    {
+        logger.debug("A REST service resulted in error: NOT FOUND" + nExp.getMessage());
+        RestError error = new RestError(nExp.getMessage());
+        return error;
+    }    
+    
+    /**
+     * Handle errors thrown by REST services and delivers a proper HTTP response.
+     * This handler will catch <b>DeviceAlreadyRegisteredException</b> with 409.
+     * 
+     * @param nExp  Exception that has ocurred.
+     * @return      {@link RestError} with error details. 
+     */
+    @ExceptionHandler(DeviceAlreadyRegisteredException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public RestError handleErrors(NotifierException nExp)
+    public RestError handleErrors(DeviceAlreadyRegisteredException nExp)
     {
-        logger.debug("A REST service resulted in error: " + nExp.getMessage());
+        logger.debug("A REST service resulted in error: BAD REQUEST" + nExp.getMessage());
         RestError error = new RestError(nExp.getMessage());
         return error;
     }   

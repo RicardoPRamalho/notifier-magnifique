@@ -38,7 +38,7 @@
                 var="device" 
                 selection="#{subscriptionsBean.currentDevices}"
                 value="#{subscriptionsBean.subscriptions}" >
-                <p:column selectionMode="multiple" style="width: 5%" /> 
+                <p:column selectionMode="multiple" style="width: 5%; text-align: center" /> 
                 <p:column headerText="#{msg['subscription.table.owner']}">  
                     <h:outputText value="#{device.ownerName}" />  
                 </p:column>  
@@ -76,9 +76,9 @@
                             actionListener="#{subscriptionsBean.unsubscribe(device.deviceId)}" />
                     </div>
                 </p:column>
-                <p:ajax event="toggleSelect" listener="#{subscriptionsBean.checkMultipleSelection}" update="pnMultipleControls" />
-                <p:ajax event="rowSelectCheckbox" listener="#{subscriptionsBean.checkMultipleSelection}" update="pnMultipleControls" /> 
-                <p:ajax event="rowUnselectCheckbox" listener="#{subscriptionsBean.checkMultipleSelection}" update="pnMultipleControls" />
+                <p:ajax event="toggleSelect" listener="#{subscriptionsBean.checkMultipleSelection}" update="@form:pnMultipleControls" />
+                <p:ajax event="rowSelectCheckbox" listener="#{subscriptionsBean.checkMultipleSelection}" update="@form:pnMultipleControls" /> 
+                <p:ajax event="rowUnselectCheckbox" listener="#{subscriptionsBean.checkMultipleSelection}" update="@form:pnMultipleControls" />
             </p:dataTable>
         </div>
         <p:outputPanel id="pnMultipleControls" layout="block">

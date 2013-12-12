@@ -52,10 +52,23 @@ public class SubscriptionServices
      * 
      * @param deviceId  Device's unique identifier, used for the lookup.
      * @return          The device related to the identifier or {@code null}.
+     * 
+     * @throws DeviceNotSubscribedException
+     *      If a given subscription code does not exists in the persistence layer,
+     *      this exception will be throw, to allow a friendly handling for the issue.
      */
     public Device findDevice(String deviceId)
     {
-        return deviceRepository.findOne(deviceId);
+        Device device = deviceRepository.findOne(deviceId);
+        if (device != null)
+        {
+            return device;
+        }
+        else
+        {
+            final String message = getMessage("subscription.msg.subscriptionNotFound");
+            throw new DeviceNotSubscribedException(message);
+        }
     }
     
     /**
@@ -129,16 +142,8 @@ public class SubscriptionServices
      */
     public void unsubscribe(String deviceId)
     {
-        Device device = deviceRepository.findOne(deviceId);
-        if (device != null)
-        {
-            deviceRepository.delete(device);
-        }
-        else
-        {
-            final String message = getMessage("subscription.msg.subscriptionNotFound");
-            throw new DeviceNotSubscribedException(message);
-        }
+        Device device = findDevice(deviceId);
+        deviceRepository.delete(device);
     }
     
     /**
