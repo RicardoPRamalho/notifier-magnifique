@@ -2,10 +2,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:p="http://primefaces.org/ui">
+      xmlns:c="http://java.sun.com/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
 <h:head>
     <title><h:outputText value="#{msg['application.title']}"/></title>
     <script type="text/javascript">
@@ -50,14 +51,14 @@
                 <f:facet name="header">  
                     <h:outputText value="#{msg['subscription.table.title']}"/>
                 </f:facet> 
-                <p:column headerText="#{msg['subscription.table.owner']}" sortBy="ownerName">  
+                <p:column headerText="#{msg['subscription.table.owner']}" sortBy="ownerName" width="25%">  
                     <h:outputText value="#{device.ownerName}" />  
                 </p:column>  
-                <p:column headerText="#{msg['subscription.table.platform']}" sortBy="osName">  
+                <p:column headerText="#{msg['subscription.table.platform']}" sortBy="osName" width="25%">  
                     <h:outputText value="#{device.osName}" />, 
                     <h:outputText value="#{device.osVersion}" />
                 </p:column>  
-                <p:column headerText="#{msg['subscription.table.registryDate']}" sortBy="registryDate">
+                <p:column headerText="#{msg['subscription.table.registryDate']}" sortBy="registryDate" width="25%">
                     <h:outputText value="#{device.registryDate}">  
                         <f:convertDateTime 
                             type="both" 
@@ -66,7 +67,7 @@
                             timeZone="#{subscriptionsBean.timeZone}" />  
                     </h:outputText> 
                 </p:column>  
-                <p:column headerText="#{msg['subscription.table.options']}">
+                <p:column headerText="#{msg['subscription.table.options']}" width="25%">
                     <div style="text-align: center">  
                         <p:commandButton 
                             id="btnNotify" 
@@ -87,6 +88,20 @@
                             actionListener="#{subscriptionsBean.unsubscribe(device.deviceId)}" />
                     </div>
                 </p:column>
+                <f:facet name="footer">
+                    <c:choose>
+                        <c:when test="#{subscriptionsBean.subscriptions.rowCount == 1}">
+                            <h:outputFormat value="#{msg['subscription.table.countSingular']}">
+                                <f:param value="#{subscriptionsBean.subscriptions.rowCount}"/>
+                            </h:outputFormat>  
+                        </c:when>
+                        <c:otherwise>
+                            <h:outputFormat value="#{msg['subscription.table.countPlural']}">
+                                <f:param value="#{subscriptionsBean.subscriptions.rowCount}"/>
+                            </h:outputFormat>  
+                        </c:otherwise>
+                    </c:choose>
+                </f:facet>                
                 <p:ajax event="rowSelect" listener="#{subscriptionsBean.checkMultipleSelection}" update="@form:pnMultipleControls" /> 
                 <p:ajax event="rowUnselect" listener="#{subscriptionsBean.checkMultipleSelection}" update="@form:pnMultipleControls" />
             </p:dataTable>
