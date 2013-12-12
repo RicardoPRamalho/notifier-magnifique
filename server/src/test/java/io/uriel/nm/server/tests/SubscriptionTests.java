@@ -45,15 +45,18 @@ public class SubscriptionTests
     @Test
     public void subscribeDeviceWithSuccess()
     {
-        final String url = BASE_URL;
-        final String[] subscriber = ApplicationData.subscriberInfo();
-        final Device device = new Device();
-        device.setOwnerName(subscriber[0]);
-        device.setSubscription(ApplicationData.subscriptionCode());
-        device.setOsName(subscriber[1]);
-        device.setOsVersion(subscriber[2]);
-        Device newDevice = rest.postForObject(url, device, Device.class);
-        assertNotNull(newDevice);
+        for (int i=0; i<50; i++)
+        {
+            final String url = BASE_URL;
+            final String[] subscriber = ApplicationData.subscriberInfo();
+            final Device device = new Device();
+            device.setOwnerName(subscriber[0]);
+            device.setSubscription(ApplicationData.subscriptionCode());
+            device.setOsName(subscriber[1]);
+            device.setOsVersion(subscriber[2]);
+            Device newDevice = rest.postForObject(url, device, Device.class);
+            assertNotNull(newDevice);
+        }
     }
     
 }

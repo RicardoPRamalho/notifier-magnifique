@@ -65,8 +65,6 @@ public class SubscriptionsBean extends AbstractManagedBean
     public Iterable<Device> getSubscriptions()
     {
         logger.debug(message("log.getSubscriptions.begin"));
-        Iterable<Device> devices = subscriptionService.listDevices();
-        dataModel.setWrappedData(devices);
         return dataModel;
     }
     

@@ -24,6 +24,8 @@ import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
@@ -39,6 +41,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class SubscriptionServices 
 {
+    /** Default page size for device listing. */
+    private static final int DEFAULT_PAGE_SIZE = 20;
+    
     /** Spring object that provides I18N messages. */
     @Autowired
     private ResourceBundleMessageSource messages;
@@ -72,17 +77,37 @@ public class SubscriptionServices
     }
     
     /**
-     * Lists all devices currently subscribed in the application, sorted by
-     * their {@code registryDate} property in descendent order.
+     * Lists devices following given directives of paging and sorting.
+     * <p>
+     * If no directives are provided, then lists a defined ammount of devices,
+     * following {@code DEFAULT_PAGE_SIZE}, ordered by their registry date and
+     * using a descending order.
+     * 
+     * @param pageAndSort
+     *      Directives of paging and sorting to be following by the underlying
+     *      repository. May be null, in that case, uses defaults above.
      * 
      * @return
-     *      An {@code Iterable} providing all devices currently subscribed in 
-     *      the application's persistence layer.
+     *      An Iterable containing all selected devices respecting directives
+     *      provided in the {@code pageAndSort} parameter.
      */
-    public Iterable<Device> listDevices()
+    public Iterable<Device> listDevices(Pageable pageAndSort)
     {
-        Sort sort = new Sort(Direction.DESC, "registryDate");
-        return deviceRepository.findAll(sort);
+        if (pageAndSort != null)
+        {
+            return deviceRepository.findAll(pageAndSort);
+        }
+        else
+        {
+            Sort sort = new Sort(Direction.DESC, "registryDate");
+            final PageRequest defaultPageAndSort = new PageRequest(0, DEFAULT_PAGE_SIZE, sort);
+            return deviceRepository.findAll(defaultPageAndSort);
+        }
+    }
+    
+    public long countDevices()
+    {
+        return deviceRepository.count();
     }
     
     /**

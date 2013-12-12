@@ -35,18 +35,29 @@
             </ui:remove>
             <p:dataTable 
                 id="deviceTable"
+                lazy="true"
                 var="device" 
+                selectionMode="multiple"
                 selection="#{subscriptionsBean.currentDevices}"
-                value="#{subscriptionsBean.subscriptions}" >
-                <p:column selectionMode="multiple" style="width: 5%; text-align: center" /> 
-                <p:column headerText="#{msg['subscription.table.owner']}">  
+                paginator="true" 
+                rows="10"
+                sortBy="registryDate"
+                sortOrder="descending"
+                value="#{subscriptionsBean.subscriptions}"
+                emptyVarMessage="#{msg['subscription.table.nothingToShow']}" 
+                rowsPerPageTemplate="10,20,40"
+                paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}" >
+                <f:facet name="header">  
+                    <h:outputText value="#{msg['subscription.table.title']}"/>
+                </f:facet> 
+                <p:column headerText="#{msg['subscription.table.owner']}" sortBy="ownerName">  
                     <h:outputText value="#{device.ownerName}" />  
                 </p:column>  
-                <p:column headerText="#{msg['subscription.table.platform']}">  
+                <p:column headerText="#{msg['subscription.table.platform']}" sortBy="osName">  
                     <h:outputText value="#{device.osName}" />, 
                     <h:outputText value="#{device.osVersion}" />
                 </p:column>  
-                <p:column headerText="#{msg['subscription.table.registryDate']}">
+                <p:column headerText="#{msg['subscription.table.registryDate']}" sortBy="registryDate">
                     <h:outputText value="#{device.registryDate}">  
                         <f:convertDateTime 
                             type="both" 
@@ -76,9 +87,8 @@
                             actionListener="#{subscriptionsBean.unsubscribe(device.deviceId)}" />
                     </div>
                 </p:column>
-                <p:ajax event="toggleSelect" listener="#{subscriptionsBean.checkMultipleSelection}" update="@form:pnMultipleControls" />
-                <p:ajax event="rowSelectCheckbox" listener="#{subscriptionsBean.checkMultipleSelection}" update="@form:pnMultipleControls" /> 
-                <p:ajax event="rowUnselectCheckbox" listener="#{subscriptionsBean.checkMultipleSelection}" update="@form:pnMultipleControls" />
+                <p:ajax event="rowSelect" listener="#{subscriptionsBean.checkMultipleSelection}" update="@form:pnMultipleControls" /> 
+                <p:ajax event="rowUnselect" listener="#{subscriptionsBean.checkMultipleSelection}" update="@form:pnMultipleControls" />
             </p:dataTable>
         </div>
         <p:outputPanel id="pnMultipleControls" layout="block">
