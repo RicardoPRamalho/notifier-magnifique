@@ -20,11 +20,11 @@ import org.primefaces.model.chart.PieChartModel;
 public privileged aspect ReportsBeanAspects 
 {
     /**
-     * Getter method for {@code pieModel}.
-     * @return Current value for {@code pieModel}.
+     * Getter method for {@code subscribersPlatforms}.
+     * @return Current value for {@code subscribersPlatforms}.
      */
-    public PieChartModel ReportsBean.getPieModel() 
+    public PieChartModel ReportsBean.getSubscribersPlatforms() 
     {
-        return pieModel;
+        return subscribersPlatforms;
     }
 }

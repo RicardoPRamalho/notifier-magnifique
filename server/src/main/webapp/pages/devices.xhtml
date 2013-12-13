@@ -88,7 +88,7 @@
                                 ajax="true"
                                 title="#{msg['subscription.btn.unsubscribe']}">
                                 <f:actionListener binding="#{subscriptionsBean.unsubscribe(device.deviceId)}"/>
-                                <f:actionListener binding="#{reportsBean.updatePieModel()}"/>
+                                <f:actionListener binding="#{reportsBean.updateSubscribersPlatforms()}"/>
                             </p:commandButton>
                         </div>
                     </p:column>
@@ -126,12 +126,12 @@
                 <p:pieChart 
                     id="subscriptionsPieChart" 
                     title="#{msg['subscription.chart.title']}"
-                    value="#{reportsBean.pieModel}" 
+                    value="#{reportsBean.subscribersPlatforms}" 
                     legendPosition="e" 
                     fill="true" 
                     showDataLabels="true"  
                     seriesColors="9ee096,96c2e0,e0a696"
-                    style="width:90%; height:300px" />
+                    style="width:95%; height:300px" />
             </div>
             <p:remoteCommand 
                 name="updateDevicesAsync" 

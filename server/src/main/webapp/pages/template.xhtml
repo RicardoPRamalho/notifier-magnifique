@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+</h:head>
+<h:body>
+    <p:layout fullPage="true">
+        <p:layoutUnit 
+            position="north" 
+            size="100" 
+            resizable="false" 
+            closable="false" 
+            collapsible="false">  
+            Notifier Magnifique
+        </p:layoutUnit>
+        <p:layoutUnit position="center">
+            <ui:include src="/template/common/commonContent.xhtml" />
+        </p:layoutUnit>
+        <p:layoutUnit 
+            position="south" 
+            size="100" 
+            header="Bottom" 
+            resizable="false" 
+            closable="false" 
+            collapsible="false">  
+            All rights reserved.  
+        </p:layoutUnit>
+    </p:layout>
+</h:body>
+</html>

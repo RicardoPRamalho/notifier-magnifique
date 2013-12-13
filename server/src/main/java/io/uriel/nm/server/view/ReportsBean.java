@@ -32,7 +32,7 @@ public class ReportsBean extends AbstractManagedBean
     private static final long serialVersionUID = 1786219971519485761L;
 
     /** Chart model used to represent platforms in a pie. */ 
-    private PieChartModel pieModel;
+    private PieChartModel subscribersPlatforms;
  
     /** Service used to manage subscriptions. */
     @Autowired
@@ -47,18 +47,18 @@ public class ReportsBean extends AbstractManagedBean
     @PostConstruct
     public void initialize()
     {
-        updatePieModel();
+        updateSubscribersPlatforms();
     }
     
     /**
      * Updates internal counters for the Pie Chart displaying current devices.
      */
-    public void updatePieModel()
+    public void updateSubscribersPlatforms()
     {
         final long[] counters = subscriptionService.countDevicesByPlatform();
-        pieModel = new PieChartModel();  
-        pieModel.set("Android", counters[0]);  
-        pieModel.set("iOS", counters[1]);  
-        pieModel.set("Windows Phone", counters[2]);
+        subscribersPlatforms = new PieChartModel();  
+        subscribersPlatforms.set("Android", counters[0]);  
+        subscribersPlatforms.set("iOS", counters[1]);  
+        subscribersPlatforms.set("Windows Phone", counters[2]);
     }
 }
