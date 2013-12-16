@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.uriel.nm.server.view.datamodel;
+package io.uriel.nm.server.business.datamodel;
 
-import io.uriel.nm.server.business.SubscriptionServices;
 import io.uriel.nm.server.business.model.Device;
+import io.uriel.nm.server.business.repository.IDeviceRepository;
 
 import java.util.List;
 import java.util.Map;
@@ -53,7 +53,7 @@ implements SelectableDataModel<Device>
 
     /** Subscription services, exposed to this Data Model. */
     @Autowired
-    private SubscriptionServices service;
+    private IDeviceRepository repository;
 
     /** {@inheritDoc} */
     @Override  
@@ -71,14 +71,14 @@ implements SelectableDataModel<Device>
         final Direction direction = sortOrder.equals(SortOrder.DESCENDING) ? Direction.DESC : Direction.ASC;
         final Sort sort = createSortDirective(direction, sortField);
         final PageRequest pageAndSort = new PageRequest(first/pageSize, pageSize, sort);
-        return ((PageImpl<Device>) service.listDevices(pageAndSort)).getContent();
+        return ((PageImpl<Device>) repository.findAll(pageAndSort)).getContent();
     }
     
     /** {@inheritDoc} */
     @Override
     public Device getRowData(String rowKey) 
     {
-        return service.findDevice(rowKey);
+        return repository.findOne(rowKey);
     }
 
     /** {@inheritDoc} */
@@ -92,7 +92,7 @@ implements SelectableDataModel<Device>
     @Override
     public int getRowCount() 
     {
-        long count = service.countDevices();
+        long count = repository.count();
         if (count < Integer.MIN_VALUE || count > Integer.MAX_VALUE) {
             throw new IllegalArgumentException("Long is too big to be cast to an int.");
         }

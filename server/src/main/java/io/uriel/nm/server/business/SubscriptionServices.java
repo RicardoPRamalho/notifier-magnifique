@@ -20,13 +20,7 @@ import io.uriel.nm.server.business.repository.IDeviceRepository;
 import io.uriel.nm.server.exception.DeviceAlreadyRegisteredException;
 import io.uriel.nm.server.exception.DeviceNotSubscribedException;
 
-import java.util.Locale;
-
-import javax.annotation.PostConstruct;
-
-import org.primefaces.model.chart.PieChartModel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -46,10 +40,6 @@ public class SubscriptionServices
 {
     /** Default page size for device listing. */
     private static final int DEFAULT_PAGE_SIZE = 20;
-    
-    /** Spring object that provides I18N messages. */
-    @Autowired
-    private ResourceBundleMessageSource messages;
     
     /** Repository interface used to access persistence layer. */
     @Autowired
@@ -108,17 +98,6 @@ public class SubscriptionServices
         }
     }
     
-    /**
-     * Counts all devices currently subscribed in the application.
-     * 
-     * @return
-     *      A {@code long} informing the current subscription count.
-     */
-    public long countDevices()
-    {
-        return deviceRepository.count();
-    }
-    
     public long[] countDevicesByPlatform()
     {
         final long[] platforms = new long[3];
@@ -127,7 +106,6 @@ public class SubscriptionServices
         platforms[2] = deviceRepository.countByOsName("WINDOWSPHONE");
         return platforms;
     }
-    
     
     /**
      * Synchronizes current entity state with persistence layer.
@@ -188,20 +166,5 @@ public class SubscriptionServices
     {
         Device device = findDevice(deviceId);
         deviceRepository.delete(device);
-    }
-
-    /**
-     * Helper method.
-     * <p>
-     * Retrieves a message from internal bundle and formats/localizes it.
-     * 
-     * @param name  Message name, as registered in bundles.
-     * @param args  Optional arguments for wildcard replacements.
-     * @return      The localized message with wildcards replaced.
-     */
-    private String getMessage(String name, String... args)
-    {
-        final String message = messages.getMessage(name, args, Locale.getDefault());
-        return message;
     }
 }

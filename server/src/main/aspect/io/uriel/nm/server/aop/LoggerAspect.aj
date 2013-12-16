@@ -43,16 +43,6 @@ public privileged aspect LoggerAspect
     pointcut restLayer(): execution(public * io.uriel.nm.server.rest.*.*(..));
     
     /** 
-     * Pointcut representing server's View layer.
-     * <ul>
-     *      <li>All classes in package {@code io.uriel.nm.server.view};</li>
-     *      <li>All classes of type {@code AbstractManagedBean};</li>
-     *      <li>All public methods, with any number of arguments.</li>
-     * </ul>
-     */
-    pointcut viewLayer(): execution(public * io.uriel.nm.server.view.AbstractManagedBean.*(..));
-    
-    /** 
      * Pointcut representing server's Business layer.
      * <ul>
      *      <li>All classes in package {@code io.uriel.nm.server.business};</li>
@@ -65,7 +55,7 @@ public privileged aspect LoggerAspect
     private Logger logger;
     
     /** Before advice. Displays a log message before a pointcut execution. */
-    before(): restLayer() || viewLayer() || businessLayer()
+    before(): restLayer() || businessLayer()
     {
         logger = LoggerFactory.getLogger(thisJoinPoint.getTarget().getClass());
         if (logger.isDebugEnabled()) 
@@ -84,7 +74,7 @@ public privileged aspect LoggerAspect
     }
 
     /** After advice. Displays a log message after a pointcut execution. */
-    after(): restLayer() || viewLayer() || businessLayer()
+    after(): restLayer() || businessLayer()
     {
         logger = LoggerFactory.getLogger(thisJoinPoint.getTarget().getClass());
         if (logger.isDebugEnabled()) 
